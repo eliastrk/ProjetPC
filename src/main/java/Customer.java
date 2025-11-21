@@ -1,5 +1,5 @@
 public class Customer {
-    private String id;
+    private final String id;
     private String name;
     private String address;
 
@@ -19,10 +19,6 @@ public class Customer {
 
     public String getAddress() {
         return address;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public void setName(String name) {
