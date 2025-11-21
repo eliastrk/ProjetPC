@@ -42,4 +42,13 @@ public class Customer {
     public int hashCode() {
         return Objects.hash(id, name, address);
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }

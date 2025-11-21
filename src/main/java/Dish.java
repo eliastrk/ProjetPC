@@ -34,4 +34,13 @@ public class Dish {
     public int hashCode() {
         return Objects.hash(name, price, size);
     }
+
+    @Override
+    public String toString() {
+        return "Dish{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", size=" + size +
+                '}';
+    }
 }
