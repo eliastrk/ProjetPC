@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Dish {
     private String name;
@@ -21,5 +22,16 @@ public class Dish {
 
     public DishSize getSize() {
         return size;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Dish dish)) return false;
+        return Objects.equals(name, dish.name) && Objects.equals(price, dish.price) && size == dish.size;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, price, size);
     }
 }

@@ -1,10 +1,13 @@
+import java.util.Objects;
+import java.util.UUID;
+
 public class Customer {
     private final String id;
     private String name;
     private String address;
 
-    public Customer(String id, String name, String address) {
-        this.id = id;
+    public Customer(String name, String address) {
+        this.id = UUID.randomUUID().toString();
         this.name = name;
         this.address = address;
     }
@@ -27,5 +30,16 @@ public class Customer {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Customer customer)) return false;
+        return Objects.equals(id, customer.id) && Objects.equals(name, customer.name) && Objects.equals(address, customer.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, address);
     }
 }

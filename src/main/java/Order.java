@@ -16,6 +16,7 @@ public class Order {
         this.dishes = dishes;
         this.customer = customer;
         this.orderDate = LocalDateTime.now();
+        this.status = OrderStatus.PENDING;
     }
 
     public String getId() {
