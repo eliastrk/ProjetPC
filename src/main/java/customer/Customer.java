@@ -1,3 +1,5 @@
+package customer;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -45,7 +47,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{" +
+        return "customer.Customer{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +

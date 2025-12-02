@@ -1,8 +1,10 @@
+package dish;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Dish {
-    private String name;
+    private final String name;
     private BigDecimal price;
     private DishSize size;
 
@@ -24,6 +26,14 @@ public class Dish {
         return size;
     }
 
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public void setSize(DishSize size) {
+        this.size = size;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Dish dish)) return false;
@@ -37,7 +47,7 @@ public class Dish {
 
     @Override
     public String toString() {
-        return "Dish{" +
+        return "dish.Dish{" +
                 "name='" + name + '\'' +
                 ", price=" + price +
                 ", size=" + size +

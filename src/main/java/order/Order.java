@@ -1,3 +1,8 @@
+package order;
+
+import customer.Customer;
+import dish.Dish;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -64,7 +69,7 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" +
+        return "order.Order{" +
                 "id='" + id + '\'' +
                 ", status=" + status +
                 ", dishes=" + dishes +
