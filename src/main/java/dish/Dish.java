@@ -3,9 +3,22 @@ package dish;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+/**
+ * Represents a Dish that is stored in an order.
+ * It has a name, a price and a size.
+ */
 public class Dish {
+    /**
+     * The name of the dish.
+     */
     private final String name;
+    /**
+     * The price of the dish.
+     */
     private BigDecimal price;
+    /**
+     * The size of the dish.
+     */
     private DishSize size;
 
     public Dish(String name, BigDecimal price, DishSize size) {

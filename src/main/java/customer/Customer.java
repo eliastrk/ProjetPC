@@ -3,6 +3,10 @@ package customer;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Represents a Customer of the delivery platform.
+ * It has a name and an address.
+ */
 public class Customer {
     private final String id;
     private String name;

@@ -51,16 +51,32 @@ public class DeliveryPlatform {
         }
     }
 
+    /**
+     * Returns an Optional containing the Order matching the specified ID
+     * if present in the orders Map.
+     * @param orderId the ID to look for inside the Map.
+     * @return an Optional containing the Order
+     */
     public Optional<Order> findOrderById(String orderId) {
         return Optional.ofNullable(this.orders.get(orderId));
     }
 
+    /**
+     * Returns all the orders made by the specified customer.
+     * @param customer the customer to look for in the orders.
+     * @return a List of Order.
+     */
     public List<Order> findOrdersByCustomer(Customer customer) {
         return this.orders.values().stream()
                 .filter(order -> order.getCustomer().equals(customer))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns all the orders matching the specified status.
+     * @param status the status to look for in the orders.
+     * @return a List of Order.
+     */
     public List<Order> findOrderByStatus(OrderStatus status) {
         return this.orders.values().stream()
                 .filter(order -> order.getStatus().equals(status))
