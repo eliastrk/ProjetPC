@@ -9,6 +9,7 @@ import restaurant.Restaurant;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.*;
 
 public class Application {
     public static void main(String[] args) {
@@ -32,16 +33,36 @@ public class Application {
         o4.setStatus(OrderStatus.CANCELLED);
         Order o5 = new Order(Map.of(d3,1),c4);
 
+        ExecutorService executor = Executors.newFixedThreadPool(5);
         DeliveryPlatform platform = new DeliveryPlatform();
         System.out.println("=========");
         System.out.println("Placing orders to the platform");
-        String do1Id = platform.placeOrder(o1).orElse("");
-        String do2Id = platform.placeOrder(o2).orElse("");
-        String do3Id = platform.placeOrder(o3).orElse("");
-        String do4Id = platform.placeOrder(o4).orElse("");
-        String do5Id = platform.placeOrder(o5).orElse("");
+        Future<String> do1IdF = executor.submit(() -> platform.placeOrder(o1).orElse(""));
+        Future<String> do2IdF = executor.submit(()->platform.placeOrder(o2).orElse(""));
+        Future<String> do3IdF = executor.submit(()->platform.placeOrder(o3).orElse(""));
+        Future<String> do4IdF = executor.submit(()->platform.placeOrder(o4).orElse(""));
+        Future<String> do5IdF = executor.submit(()->platform.placeOrder(o5).orElse(""));
         System.out.println();
 
+        executor.shutdown();
+
+        String do1Id;
+        String do2Id;
+        String do3Id;
+        String do4Id;
+        String do5Id;
+
+        try {
+            do1Id = do1IdF.get();
+            do2Id = do2IdF.get();
+            do3Id = do3IdF.get();
+            do4Id = do4IdF.get();
+            do5Id = do5IdF.get();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
 
         System.out.println("Orders by ID");
         System.out.println("=========");
