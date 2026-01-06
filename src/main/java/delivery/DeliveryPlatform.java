@@ -35,7 +35,7 @@ public class DeliveryPlatform {
      * @param order the order to simulate the placement in the platform.
      * @return an Optional object containing the generated order UUID if the preparation succeed.
      */
-    public Optional<String> placeOrder(Order order) {
+    public synchronized Optional<String> placeOrder(Order order) {
         order.setStatus(OrderStatus.PENDING);
         try {
             Restaurant.prepare(order);
