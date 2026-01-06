@@ -55,12 +55,17 @@ public class Application {
 
         System.out.println("Orders by status");
         System.out.println("=========");
+        platform.findOrderByStatus(OrderStatus.PENDING).stream().forEach(System.out::println);
+        platform.findOrderByStatus(OrderStatus.IN_PREPARATION).stream().forEach(System.out::println);
         platform.findOrderByStatus(OrderStatus.COMPLETED).stream().forEach(System.out::println);
+        platform.findOrderByStatus(OrderStatus.CANCELLED).stream().forEach(System.out::println);
         System.out.println();
 
         System.out.println("Order by Customer");
         System.out.println("=========");
         platform.findOrdersByCustomer(c4).stream().forEach(System.out::println);
         System.out.println();
+
+
     }
 }
