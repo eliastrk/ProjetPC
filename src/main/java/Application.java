@@ -8,12 +8,10 @@ import restaurant.Restaurant;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Objects;
 
 public class Application {
     public static void main(String[] args) {
-        Restaurant r1 = new Restaurant("Les Saveurs du Nord", "Lille");
-        Restaurant r2 = new Restaurant("Pepe Chicken", "Noisy-le-Grand");
-        Restaurant r3 = new Restaurant("Orgueil", "Paris");
 
         Customer c1 = new Customer("Matthieu Herbaut","Lens");
         Customer c2 = new Customer("Jean-Jacques Goldman", "Paris");
@@ -35,22 +33,26 @@ public class Application {
         Order o5 = new Order(Map.of(d3,1),c4);
 
         DeliveryPlatform platform = new DeliveryPlatform();
-
-        String r1Id = platform.signInRestaurant(r1);
-        String r2Id = platform.signInRestaurant(r2);
-        String r3Id = platform.signInRestaurant(r3);
-
-        platform.placeOrder(r1Id, o1);
-        platform.placeOrder(r3Id, o2);
-        platform.placeOrder(r2Id, o3);
-        platform.placeOrder(r1Id, o4);
-        platform.placeOrder(r2Id, o5);
+        System.out.println("=========");
+        System.out.println("Placing orders to the platform");
+        String do1Id = platform.placeOrder(o1).orElse("");
+        String do2Id = platform.placeOrder(o2).orElse("");
+        String do3Id = platform.placeOrder(o3).orElse("");
+        String do4Id = platform.placeOrder(o4).orElse("");
+        String do5Id = platform.placeOrder(o5).orElse("");
+        System.out.println();
 
 
         System.out.println("Orders by ID");
         System.out.println("=========");
-        System.out.println(platform.findOrderById(r1Id).get());
-        System.out.println(platform.findOrderById(r3Id).get());
+        Order resultOrder1 = platform.findOrderById(do1Id).orElse(null);
+        if (Objects.nonNull(resultOrder1)) {
+            System.out.println(resultOrder1);
+        }
+        Order resultOrder2 = platform.findOrderById(do3Id).orElse(null);
+        if (Objects.nonNull(resultOrder2)) {
+            System.out.println(resultOrder2);
+        }
         System.out.println();
 
         System.out.println("Orders by status");
@@ -65,7 +67,6 @@ public class Application {
         System.out.println("=========");
         platform.findOrdersByCustomer(c4).stream().forEach(System.out::println);
         System.out.println();
-
 
     }
 }

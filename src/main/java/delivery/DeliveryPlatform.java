@@ -2,47 +2,52 @@ package delivery;
 
 import customer.Customer;
 import exceptions.OrderPreparationException;
-import exceptions.RestaurantNotFoundException;
 import order.Order;
 import order.OrderStatus;
 import restaurant.Restaurant;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a Delivery Platform for a restaurant.
+ * This class stores orders and provides methods to get commands
+ * from a specific criteria (id, customer, order status).
+ */
 public class DeliveryPlatform {
-    private final Map<String, Order> orders;
-    private final Map<String, Restaurant> restaurants;
+    /**
+     * The unique Map that stores orders with a random UUID rendered
+     * to a String as key.
+     */
+    private final ConcurrentHashMap<String, Order> orders;
 
     public DeliveryPlatform() {
-        this.orders = new HashMap<>();
-        this.restaurants = new HashMap<>();
+        this.orders = new ConcurrentHashMap<>();
     }
 
-    public String signInRestaurant(Restaurant restaurant) {
-        String uuid = UUID.randomUUID().toString();
-        this.restaurants.put(uuid,restaurant);
-        return uuid;
-    }
-
-    public void placeOrder(String restaurantId, Order order) {
+    /**
+     * Simulates the placement of an order to send to the Restaurant to
+     * get it prepared.
+     * The order preparation can fail so its status is passed to CANCELLED.
+     * If the preparation succeed, the status is passed to IN_PREPARATION.
+     * @see Restaurant
+     * @param order the order to simulate the placement in the platform.
+     * @return an Optional object containing the generated order UUID if the preparation succeed.
+     */
+    public Optional<String> placeOrder(Order order) {
         order.setStatus(OrderStatus.PENDING);
         try {
-            Restaurant restaurant = this.restaurants.get(restaurantId);
-            if (Objects.isNull(restaurant)) {
-                throw new RestaurantNotFoundException("The specified restaurant is not signed in.");
-            }
-            restaurant.prepareOrder(order);
-            this.orders.put(restaurantId,order);
+            Restaurant.prepare(order);
             order.setStatus(OrderStatus.IN_PREPARATION);
         } catch (OrderPreparationException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
             order.setStatus(OrderStatus.CANCELLED);
-        } catch (RestaurantNotFoundException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            order.setStatus(OrderStatus.CANCELLED);
+        } finally {
+            String deliveryOrderId = UUID.randomUUID().toString();
+            this.orders.putIfAbsent(deliveryOrderId,order);
+            return Optional.of(deliveryOrderId);
         }
     }
 
