@@ -50,9 +50,13 @@ public class Order {
 
     public BigDecimal calculateTotalPrice() {
         BigDecimal total = new BigDecimal(0);
-        for (Map.Entry<Dish,Integer> entry : this.dishes.entrySet()) {
-            total = total.add(entry.getKey().getPrice()).multiply(new BigDecimal(entry.getValue()));
+        
+        for (Map.Entry<Dish, Integer> entry : this.dishes.entrySet()) {
+            BigDecimal unitPrice = entry.getKey().getPrice();
+            BigDecimal quantity = BigDecimal.valueOf(entry.getValue());
+            total = total.add(unitPrice.multiply(quantity));
         }
+
         return total;
     }
 
