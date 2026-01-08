@@ -68,7 +68,7 @@ public class Application {
 
         for (String deliveryId : new String[]{do1Id, do2Id, do3Id, do4Id, do5Id}) {
             if (deliveryId != null && !deliveryId.isBlank()) {
-                System.out.println("Saving order with deliveryId = " + deliveryId);
+                //System.out.println("Saving order with deliveryId = " + deliveryId);
                 try {
                     platform.saveOrderToDatabase(deliveryId);
                 } catch (SQLException e) {

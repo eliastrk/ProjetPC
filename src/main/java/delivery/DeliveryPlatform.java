@@ -5,6 +5,7 @@ import exceptions.OrderPreparationException;
 import order.Order;
 import order.OrderStatus;
 import restaurant.Restaurant;
+import logger.Logger;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,6 +38,10 @@ public class DeliveryPlatform {
     private static final String DB_PASS = System.getenv()
         .getOrDefault("FOODFAST_DB_PASS", "postgres");
 
+    private final Logger logger = Logger.getInstance();
+
+
+
     public DeliveryPlatform() {
         this.orders = new ConcurrentHashMap<>();
     }
@@ -56,12 +61,13 @@ public class DeliveryPlatform {
             Restaurant.prepare(order);
             order.setStatus(OrderStatus.IN_PREPARATION);
         } catch (OrderPreparationException e) {
-            System.out.println(e.getMessage());
+            logger.error("La préparation de la commande a échoué : " + e.getMessage());
             //e.printStackTrace();
             order.setStatus(OrderStatus.CANCELLED);
         } finally {
             String deliveryOrderId = UUID.randomUUID().toString();
             this.orders.putIfAbsent(deliveryOrderId,order);
+            logger.info("La commande a été créé. deliveryId=" + deliveryOrderId + ", status=" + order.getStatus());
             return Optional.of(deliveryOrderId);
         }
     }
