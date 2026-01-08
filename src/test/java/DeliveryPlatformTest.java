@@ -16,8 +16,8 @@ public class DeliveryPlatformTest {
     public void testPlaceOrderAndFindById() {
         DeliveryPlatform platform = new DeliveryPlatform();
 
-        Customer c = new Customer("Alice", "Paris");
-        Dish d = new Dish("Burger", new BigDecimal("8.50"), DishSize.MEDIUM);
+        Customer c = new Customer("Daoud", "Baskinta");
+        Dish d = new Dish("Couscous", new BigDecimal("8.50"), DishSize.MEDIUM);
 
         Map<Dish, Integer> dishes = new HashMap<>();
         dishes.put(d, 1);
@@ -35,15 +35,14 @@ public class DeliveryPlatformTest {
     public void testFindOrdersByCustomer() {
         DeliveryPlatform platform = new DeliveryPlatform();
 
-        Customer c1 = new Customer("Alice", "Paris");
-        Customer c2 = new Customer("Bob", "Lyon");
+        Customer c1 = new Customer("Daoud", "Liban");
+        Customer c2 = new Customer("Matheo", "Amsterdam");
 
-        Dish d = new Dish("Frites", new BigDecimal("4.20"), DishSize.SMALL);
+        Dish d = new Dish("Brics", new BigDecimal("4.20"), DishSize.SMALL);
 
         Map<Dish, Integer> dishes = new HashMap<>();
         dishes.put(d, 1);
 
-        // On place plusieurs commandes pour être sûr d'en avoir pour chaque customer
         platform.placeOrder(new Order(dishes, c1));
         platform.placeOrder(new Order(dishes, c1));
         platform.placeOrder(new Order(dishes, c2));
