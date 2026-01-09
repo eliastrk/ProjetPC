@@ -20,7 +20,7 @@ public class Order implements Serializable {
 
     public Order(Map<Dish, Integer> dishes, Customer customer) {
         this.id = UUID.randomUUID().toString();
-        this.dishes = dishes;
+        this.dishes = new java.util.HashMap<>(dishes);
         this.customer = customer;
         this.orderDate = LocalDateTime.now();
         this.status = OrderStatus.PENDING;

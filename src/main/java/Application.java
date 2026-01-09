@@ -39,12 +39,15 @@ public class Application {
         DeliveryPlatform platform = new DeliveryPlatform();
         System.out.println("=========");
         System.out.println("Placing orders to the platform");
+        System.out.println();
         Future<String> do1IdF = executor.submit(() -> platform.placeOrder(o1).orElse(""));
         Future<String> do2IdF = executor.submit(()->platform.placeOrder(o2).orElse(""));
         Future<String> do3IdF = executor.submit(()->platform.placeOrder(o3).orElse(""));
         Future<String> do4IdF = executor.submit(()->platform.placeOrder(o4).orElse(""));
         Future<String> do5IdF = executor.submit(()->platform.placeOrder(o5).orElse(""));
         System.out.println();
+        System.out.println();
+
 
         executor.shutdown();
 
@@ -72,23 +75,27 @@ public class Application {
                 try {
                     platform.saveOrderToDatabase(deliveryId);
                 } catch (SQLException e) {
-                    System.err.println("Failed to save order to DB (deliveryId=" + deliveryId + "): " + e.getMessage());
+                    System.err.println("Failed to save order to DB (deliveryId=" + deliveryId + "): " + e.getMessage() + "\n");
                 }
             }
         }
+
+        System.out.println();
+        System.out.println();
+
 
         String saveFile = "data/platform.ser";
 
         try {
             platform.savePlatformState(saveFile);
-            System.out.println("Platform state saved to: " + saveFile);
+            System.out.println("Platform state saved to: " + saveFile + "\n");
 
             DeliveryPlatform platformReloaded = new DeliveryPlatform();
 
             platformReloaded.loadPlatformState(saveFile);
-            System.out.println("Platform state loaded from: " + saveFile);
+            System.out.println("Platform state loaded from: " + saveFile + "\n");
 
-            System.out.println("Orders reloaded (IN_PREPARATION):");
+            System.out.println("Orders reloaded (IN_PREPARATION):\n");
             platformReloaded.findOrderByStatus(OrderStatus.IN_PREPARATION)
                     .forEach(System.out::println);
 
@@ -97,6 +104,8 @@ public class Application {
             e.printStackTrace();
         }
 
+        System.out.println();
+        System.out.println();
 
         System.out.println("Orders by ID");
         System.out.println("=========");
@@ -109,6 +118,7 @@ public class Application {
             System.out.println(resultOrder2);
         }
         System.out.println();
+        System.out.println();
 
         System.out.println("Orders by status");
         System.out.println("=========");
@@ -116,6 +126,7 @@ public class Application {
         platform.findOrderByStatus(OrderStatus.IN_PREPARATION).stream().forEach(System.out::println);
         platform.findOrderByStatus(OrderStatus.COMPLETED).stream().forEach(System.out::println);
         platform.findOrderByStatus(OrderStatus.CANCELLED).stream().forEach(System.out::println);
+        System.out.println();
         System.out.println();
 
         System.out.println("Order by Customer");
