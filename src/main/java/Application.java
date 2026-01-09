@@ -77,6 +77,27 @@ public class Application {
             }
         }
 
+        String saveFile = "data/platform.ser";
+
+        try {
+            platform.savePlatformState(saveFile);
+            System.out.println("Platform state saved to: " + saveFile);
+
+            DeliveryPlatform platformReloaded = new DeliveryPlatform();
+
+            platformReloaded.loadPlatformState(saveFile);
+            System.out.println("Platform state loaded from: " + saveFile);
+
+            System.out.println("Orders reloaded (IN_PREPARATION):");
+            platformReloaded.findOrderByStatus(OrderStatus.IN_PREPARATION)
+                    .forEach(System.out::println);
+
+        } catch (Exception e) {
+            System.err.println("Save/Load failed: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+
         System.out.println("Orders by ID");
         System.out.println("=========");
         Order resultOrder1 = platform.findOrderById(do1Id).orElse(null);

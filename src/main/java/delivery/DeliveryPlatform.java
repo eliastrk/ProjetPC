@@ -17,6 +17,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+import java.io.*;
+import java.nio.file.*;
+
 /**
  * Represents a Delivery Platform for a restaurant.
  * This class stores orders and provides methods to get commands
@@ -38,7 +41,8 @@ public class DeliveryPlatform {
     private static final String DB_PASS = System.getenv()
         .getOrDefault("FOODFAST_DB_PASS", "postgres");
 
-    private final Logger logger = Logger.getInstance();
+    private transient Logger logger = Logger.getInstance();
+
 
 
 
@@ -141,4 +145,32 @@ public class DeliveryPlatform {
             ps.executeUpdate();
         }
     }
+
+    public void savePlatformState(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+
+        if (path.getParent() != null) {
+            Files.createDirectories(path.getParent());
+        }
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(path))) {
+            oos.writeObject(this.orders);
+        }
+    }
+
+    public void loadPlatformState(String filePath) throws IOException, ClassNotFoundException {
+        Path path = Paths.get(filePath);
+
+        try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(path))) {
+            Object obj = ois.readObject();
+            @SuppressWarnings("unchecked")
+            ConcurrentHashMap<String, Order> loaded = (ConcurrentHashMap<String, Order>) obj;
+
+            this.orders.clear();
+            this.orders.putAll(loaded);
+        }
+
+        this.logger = Logger.getInstance();
+    }
+
 }
