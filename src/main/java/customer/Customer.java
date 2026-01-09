@@ -2,15 +2,17 @@ package customer;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.io.Serializable;
 
 /**
  * Represents a Customer of the delivery platform.
  * It has a name and an address.
  */
-public class Customer {
+public class Customer implements Serializable {
     private final String id;
     private String name;
     private String address;
+    private static final long serialVersionUID = 1L;
 
     public Customer(String name, String address) {
         this.id = UUID.randomUUID().toString();

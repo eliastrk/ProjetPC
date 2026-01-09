@@ -8,13 +8,15 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.io.Serializable;
 
-public class Order {
+public class Order implements Serializable {
     private final String id;
     private OrderStatus status;
     private final Map<Dish, Integer> dishes;
     private final Customer customer;
     private final LocalDateTime orderDate;
+    private static final long serialVersionUID = 1L;
 
     public Order(Map<Dish, Integer> dishes, Customer customer) {
         this.id = UUID.randomUUID().toString();

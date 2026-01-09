@@ -2,12 +2,13 @@ package dish;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.io.Serializable;
 
 /**
  * Represents a Dish that is stored in an order.
  * It has a name, a price and a size.
  */
-public class Dish {
+public class Dish implements Serializable {
     /**
      * The name of the dish.
      */
@@ -20,6 +21,8 @@ public class Dish {
      * The size of the dish.
      */
     private DishSize size;
+
+    private static final long serialVersionUID = 1L;
 
     public Dish(String name, BigDecimal price, DishSize size) {
         this.name = name;
