@@ -5,10 +5,17 @@ import exceptions.OrderPreparationException;
 import order.Order;
 import order.OrderStatus;
 import restaurant.Restaurant;
+import logger.Logger;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  * Represents a Delivery Platform for a restaurant.
@@ -21,6 +28,19 @@ public class DeliveryPlatform {
      * to a String as key.
      */
     private final ConcurrentHashMap<String, Order> orders;
+
+    private static final String DB_URL  = System.getenv()
+        .getOrDefault("FOODFAST_DB_URL", "jdbc:postgresql://localhost:5432/foodfast");
+
+    private static final String DB_USER = System.getenv()
+        .getOrDefault("FOODFAST_DB_USER", "postgres");
+
+    private static final String DB_PASS = System.getenv()
+        .getOrDefault("FOODFAST_DB_PASS", "postgres");
+
+    private final Logger logger = Logger.getInstance();
+
+
 
     public DeliveryPlatform() {
         this.orders = new ConcurrentHashMap<>();
@@ -41,12 +61,13 @@ public class DeliveryPlatform {
             Restaurant.prepare(order);
             order.setStatus(OrderStatus.IN_PREPARATION);
         } catch (OrderPreparationException e) {
-            System.out.println(e.getMessage());
+            logger.error("La préparation de la commande a échoué : " + e.getMessage());
             //e.printStackTrace();
             order.setStatus(OrderStatus.CANCELLED);
         } finally {
             String deliveryOrderId = UUID.randomUUID().toString();
             this.orders.putIfAbsent(deliveryOrderId,order);
+            logger.info("La commande a été créé. deliveryId=" + deliveryOrderId + ", status=" + order.getStatus());
             return Optional.of(deliveryOrderId);
         }
     }
@@ -81,5 +102,43 @@ public class DeliveryPlatform {
         return this.orders.values().stream()
                 .filter(order -> order.getStatus().equals(status))
                 .collect(Collectors.toList());
+    }
+
+
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+    }
+
+
+    public void saveOrderToDatabase(String deliveryId) throws SQLException {
+        Order order = this.orders.get(deliveryId);
+        if (order == null) {
+            throw new IllegalArgumentException("Unknown deliveryId: " + deliveryId);
+        }
+
+        String sql = """
+            INSERT INTO orders (
+                delivery_id, order_id,
+                customer_id, customer_name, customer_addr,
+                status, order_date, total_price
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT (delivery_id) DO NOTHING
+            """;
+
+        try (Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, deliveryId);
+            ps.setString(2, order.getId());
+            ps.setString(3, order.getCustomer().getId());
+            ps.setString(4, order.getCustomer().getName());
+            ps.setString(5, order.getCustomer().getAddress());
+            ps.setString(6, order.getStatus().name());
+            ps.setTimestamp(7, Timestamp.valueOf(order.getOrderDate()));
+            ps.setBigDecimal(8, order.calculateTotalPrice());
+
+            ps.executeUpdate();
+        }
     }
 }

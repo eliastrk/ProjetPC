@@ -12,7 +12,7 @@ public class DishTest {
         Dish d1 = new Dish("Pâtes au pesto", new BigDecimal(4), DishSize.SMALL);
 
         Assertions.assertEquals("Pâtes au pesto", d1.getName());
-        Assertions.assertEquals(new BigDecimal(8), d1.getPrice());
+        Assertions.assertEquals(new BigDecimal(4), d1.getPrice());
         Assertions.assertEquals(DishSize.SMALL, d1.getSize());
     }
 

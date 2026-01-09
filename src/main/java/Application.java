@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.*;
 
+import java.sql.SQLException;
+
 public class Application {
     public static void main(String[] args) {
 
@@ -62,6 +64,17 @@ public class Application {
             throw new RuntimeException(e);
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
+        }
+
+        for (String deliveryId : new String[]{do1Id, do2Id, do3Id, do4Id, do5Id}) {
+            if (deliveryId != null && !deliveryId.isBlank()) {
+                //System.out.println("Saving order with deliveryId = " + deliveryId);
+                try {
+                    platform.saveOrderToDatabase(deliveryId);
+                } catch (SQLException e) {
+                    System.err.println("Failed to save order to DB (deliveryId=" + deliveryId + "): " + e.getMessage());
+                }
+            }
         }
 
         System.out.println("Orders by ID");
